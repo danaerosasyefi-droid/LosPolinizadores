@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Los Polinizadores Diurnos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde: #2d6a4f;
+      --verde-claro: #40916c;
+      --naranja: #ff9f1c;
+      --fondo: #f8fff4;
+      --texto: #1b4332;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Quicksand', sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+      overflow: hidden;
+    }
+
+    .presentacion { height: 100%; position: relative; }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      padding: 24px 36px 90px;
+      overflow: auto;
+    }
+
+    .slide.activa {
+      display: flex;
+      animation: entrar 0.45s ease;
+    }
+
+    @keyframes entrar {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header.titulo-principal { text-align: center; margin-bottom: 14px; }
+
+    header.titulo-principal h1 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.7rem, 4vw, 2.8rem);
+      color: var(--verde);
+    }
+
+    header.titulo-principal p {
+      font-size: 1.05rem;
+      color: var(--verde-claro);
+      font-weight: 600;
+    }
+
+    .contenido {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide-3 .contenido {
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+
+    .texto h2 {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2.1rem);
+      color: var(--verde);
+      margin-bottom: 14px;
+    }
+
+    .texto p, .texto li { font-size: 1.12rem; line-height: 1.55; }
+    .texto ul { margin: 12px 0 16px 8px; list-style: none; }
+    .texto li { position: relative; padding-left: 28px; margin-bottom: 10px; }
+    .texto li::before { content: "🌼"; position: absolute; left: 0; top: 0; }
+
+    .destacado {
+      background: linear-gradient(135deg, #d8f3dc, #b7e4c7);
+      border-left: 6px solid var(--verde-claro);
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .imagen-caja {
+      background: white;
+      border-radius: 24px;
+      padding: 12px;
+      box-shadow: 0 16px 40px rgba(45, 106, 79, 0.18);
+    }
+
+    .fotos-dobles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .foto {
+      width: 100%;
+      height: min(46vh, 380px);
+      object-fit: cover;
+      border-radius: 16px;
+      display: block;
+      background: #e9f5ee;
+    }
+
+    .fotos-dobles .foto { height: min(38vh, 280px); }
+
+    .pie-imagen {
+      text-align: center;
+      font-size: 0.88rem;
+      color: #52796f;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    .aviso-img {
+      display: none;
+      margin: 8px 0 4px;
+      padding: 8px 10px;
+      background: #fff3bf;
+      border: 1px dashed #f59f00;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      color: #5c4b00;
+    }
+
+    .aviso-img.visible { display: block; }
+
+    .btn-archivo {
+      display: inline-block;
+      margin-top: 6px;
+      background: var(--verde);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+
+    nav.controles {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255,255,255,0.92);
+      padding: 10px 16px;
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      z-index: 10;
+    }
+
+    nav.controles button {
+      border: none;
+      background: var(--verde);
+      color: white;
+      font-family: inherit;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    nav.controles button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .puntos { display: flex; gap: 8px; }
+    .punto {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #cfe7d8; border: none; cursor: pointer;
+    }
+    .punto.activo { background: var(--naranja); }
+    .numero-slide { font-weight: 800; color: var(--verde); min-width: 48px; text-align: center; }
+
+    #slide-1 { background: linear-gradient(180deg, #fff9db 0%, #f8fff4 55%); }
+    #slide-2 { background: linear-gradient(180deg, #caf0f8 0%, #f8fff4 55%); }
+    #slide-3 { background: linear-gradient(180deg, #d8f3dc 0%, #f8fff4 55%); }
+
+    @media (max-width: 900px) {
+      .slide { padding: 16px 16px 100px; }
+      .contenido, .slide-3 .contenido, .fotos-dobles { grid-template-columns: 1fr; }
+      .foto, .fotos-dobles .foto { height: 28vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="presentacion">
+    <section class="slide activa" id="slide-1">
+      <header class="titulo-principal">
+        <h1>Los Polinizadores Diurnos</h1>
+        <p>Una presentación sobre los ayudantes de las flores</p>
+      </header>
+      <div class="contenido">
+        <div class="texto">
+          <h2>1. ¿Cuáles son algunos de ellos?</h2>
+          <p>Los polinizadores diurnos son animales que visitan las flores <strong>durante el día</strong>. Algunos de los más conocidos son:</p>
+          <ul>
+            <li>Las <strong>abejas</strong> y los abejorros</li>
+            <li>Las <strong>mariposas</strong></li>
+            <li>Las <strong>avispas</strong></li>
+            <li>Ciertas <strong>moscas</strong> (como las sírfidas)</li>
+            <li>Los <strong>colibríes</strong></li>
+            <li>Algunos <strong>escarabajos</strong></li>
+          </ul>
+          <p class="destacado">Están activos cuando hay sol y las flores están abiertas, a diferencia de polillas o murciélagos, que suelen trabajar de noche.</p>
+        </div>
+        <figure class="imagen-caja">
+          <img class="foto" id="foto-1" alt="Polinizadores diurnos visitando flores">
+          <div class="aviso-img" id="aviso-1">No se encontró <code>images/polinizadores.jpg</code>. Usa el botón para elegirla.</div>
+          <figcaption class="pie-imagen">Abejas, mariposas y otros visitantes diurnos</figcaption>
+          <label class="btn-archivo">Elegir foto<input type="file" accept="image/*" hidden data-target="foto-1" data-aviso="aviso-1"></label>
+        </figure>
+      </div>
+    </section>
+
+    <section class="slide" id="slide-2">
+      <header class="titulo-principal">
+        <h1>Los Polinizadores Diurnos</h1>
+        <p>¿Qué hacen cuando visitan una flor?</p>
+      </header>
+      <div class="contenido">
+        <div class="texto">
+          <h2>2. ¿Qué es lo que hacen?</h2>
+          <p>Van de flor en flor para alimentarse. Toman el <strong>néctar</strong> (un líquido dulce) y a veces también el <strong>polen</strong>.</p>
+          <ul>
+            <li>El polen se pega a su cuerpo, patas o pico.</li>
+            <li>Cuando llegan a otra flor, parte de ese polen se queda allí.</li>
+            <li>Así las plantas pueden reproducirse y formar semillas y frutos.</li>
+          </ul>
+          <p class="destacado">Sin darse cuenta, hacen un trabajo enorme: transportan el polen de una flor a otra.</p>
+        </div>
+        <figure class="imagen-caja">
+          <img class="foto" id="foto-2" alt="Polinizador alimentándose en una flor">
+          <div class="aviso-img" id="aviso-2">No se encontró <code>images/polinizadores2.jpg</code>. Usa el botón para elegirla.</div>
+          <figcaption class="pie-imagen">Al alimentarse, llevan polen de una flor a otra</figcaption>
+          <label class="btn-archivo">Elegir foto<input type="file" accept="image/*" hidden data-target="foto-2" data-aviso="aviso-2"></label>
+        </figure>
+      </div>
+    </section>
+
+    <section class="slide slide-3" id="slide-3">
+      <header class="titulo-principal">
+        <h1>Los Polinizadores Diurnos</h1>
+        <p>Por qué debemos cuidarlos</p>
+      </header>
+      <div class="contenido">
+        <div class="texto">
+          <h2>3. ¿Por qué son importantes?</h2>
+          <p>Son esenciales para la naturaleza y también para las personas:</p>
+          <ul>
+            <li>Ayudan a que existan muchas <strong>frutas y verduras</strong> (manzanas, tomates, calabazas, sandías…).</li>
+            <li>Mantienen los ecosistemas llenos de plantas, flores y alimento para otros animales.</li>
+            <li>Sin ellos, habría menos comida y menos biodiversidad.</li>
+          </ul>
+          <p class="destacado">Podemos ayudarlos plantando flores, dejando un rincón silvestre y evitando el uso innecesario de pesticidas.</p>
+        </div>
+        <div class="fotos-dobles">
+          <figure class="imagen-caja">
+            <img class="foto" id="foto-3" alt="Flores y frutos gracias a la polinización">
+            <div class="aviso-img" id="aviso-3">Falta <code>images/polinizadores3.jpg</code></div>
+            <figcaption class="pie-imagen">Foto 1: flores y polinización</figcaption>
+            <label class="btn-archivo">Elegir foto 1<input type="file" accept="image/*" hidden data-target="foto-3" data-aviso="aviso-3"></label>
+          </figure>
+          <figure class="imagen-caja">
+            <img class="foto" id="foto-4" alt="Otra imagen de polinizadores o frutos">
+            <div class="aviso-img" id="aviso-4">Falta <code>images/polinizadores4.jpg</code> — elige aquí la foto que se te olvidó</div>
+            <figcaption class="pie-imagen">Foto 2: la imagen extra</figcaption>
+            <label class="btn-archivo">Elegir foto 2<input type="file" accept="image/*" hidden data-target="foto-4" data-aviso="aviso-4"></label>
+          </figure>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <nav class="controles">
+    <button id="btn-atras" type="button">◀ Atrás</button>
+    <div class="puntos">
+      <button class="punto activo" data-slide="0"></button>
+      <button class="punto" data-slide="1"></button>
+      <button class="punto" data-slide="2"></button>
+    </div>
+    <span class="numero-slide" id="numero">1 / 3</span>
+    <button id="btn-siguiente" type="button">Siguiente ▶</button>
+  </nav>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const puntos = document.querySelectorAll('.punto');
+    const btnAtras = document.getElementById('btn-atras');
+    const btnSiguiente = document.getElementById('btn-siguiente');
+    const numero = document.getElementById('numero');
+    let actual = 0;
+
+    function mostrar(n) {
+      actual = Math.max(0, Math.min(n, slides.length - 1));
+      slides.forEach((s, i) => s.classList.toggle('activa', i === actual));
+      puntos.forEach((p, i) => p.classList.toggle('activo', i === actual));
+      numero.textContent = (actual + 1) + ' / ' + slides.length;
+      btnAtras.disabled = actual === 0;
+      btnSiguiente.disabled = actual === slides.length - 1;
+    }
+
+    btnAtras.addEventListener('click', () => mostrar(actual - 1));
+    btnSiguiente.addEventListener('click', () => mostrar(actual + 1));
+    puntos.forEach(p => p.addEventListener('click', () => mostrar(Number(p.dataset.slide))));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        mostrar(actual + 1);
+      }
+      if (e.key === 'ArrowLeft') mostrar(actual - 1);
+    });
+
+    const fotos = [
+      {
+        id: 'foto-1', aviso: 'aviso-1',
+        locales: ['images/polinizadores.jpg', 'images/polinizadores.JPG', 'polinizadores.jpg'],
+        online: 'https://commons.wikimedia.org/wiki/Special:FilePath/A_bee_on_the_flower.jpg'
+      },
+      {
+        id: 'foto-2', aviso: 'aviso-2',
+        locales: ['images/polinizadores2.jpg', 'images/polinizadores2.JPG', 'polinizadores2.jpg'],
+        online: 'https://commons.wikimedia.org/wiki/Special:FilePath/Butterfly_in_a_flower_doing_pollination.jpg'
+      },
+      {
+        id: 'foto-3', aviso: 'aviso-3',
+        locales: ['images/polinizadores3.jpg', 'images/polinizadores3.JPG', 'polinizadores3.jpg'],
+        online: 'https://commons.wikimedia.org/wiki/Special:FilePath/Biene_an_Apfelbluete.jpg'
+      },
+      {
+        id: 'foto-4', aviso: 'aviso-4',
+        locales: ['images/polinizadores4.jpg', 'images/polinizadores4.JPG', 'polinizadores4.jpg', 'images/otra.jpg'],
+        online: 'https://commons.wikimedia.org/wiki/Special:FilePath/Flowers_bees.jpg'
+      }
+    ];
+
+    function probarRutas(img, rutas, aviso, i) {
+      if (i >= rutas.length) {
+        aviso.classList.add('visible');
+        return;
+      }
+      const prueba = new Image();
+      prueba.onload = () => {
+        img.src = rutas[i];
+        aviso.classList.remove('visible');
+      };
+      prueba.onerror = () => probarRutas(img, rutas, aviso, i + 1);
+      prueba.src = rutas[i];
+    }
+
+    fotos.forEach(f => {
+      const img = document.getElementById(f.id);
+      const aviso = document.getElementById(f.aviso);
+      probarRutas(img, f.locales.concat(f.online), aviso, 0);
+    });
+
+    document.querySelectorAll('input[type="file"]').forEach(input => {
+      input.addEventListener('change', () => {
+        const archivo = input.files && input.files[0];
+        if (!archivo) return;
+        document.getElementById(input.dataset.target).src = URL.createObjectURL(archivo);
+        document.getElementById(input.dataset.aviso).classList.remove('visible');
+      });
+    });
+
+    mostrar(0);
+  </script>
+</body>
+</html>
